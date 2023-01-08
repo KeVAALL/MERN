@@ -2,6 +2,17 @@
   text-align: center;
 }
 
+div {
+  margin: auto;
+  width: 50%;
+  font-size: larger;
+}
+
+input {
+  display: block;
+  margin-bottom: 2rem;
+}
+
 .App-logo {
   height: 40vmin;
   pointer-events: none;
