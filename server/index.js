@@ -13,9 +13,7 @@ app.get("/", (req, res) => {
 app.post("/register", (req, res) => {
   const { name, email, password } = req.body;
 
-  console.log(`Name: ${name} 
-    Email: ${email}
-    Password: ${password}`);
+  console.log(req.body);
 });
 
 app.listen(PORT, () => {
