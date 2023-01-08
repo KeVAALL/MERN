@@ -7,6 +7,12 @@ function App() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  const emptyInput = () => {
+    setName("");
+    setEmail("");
+    setPassword("");
+  };
+
   const registerUser = async (e) => {
     e.preventDefault();
 
@@ -24,6 +30,8 @@ function App() {
     const data = await response.json();
 
     console.log(data);
+    emptyInput();
+    // setName("");
   };
 
   return (
@@ -31,6 +39,7 @@ function App() {
       <h1>Register</h1>
       <form onSubmit={registerUser}>
         <input
+          name="name"
           type="text"
           value={name}
           onChange={(e) => {
@@ -39,6 +48,7 @@ function App() {
           placeholder="Name"
         />
         <input
+          name="email"
           type="email"
           value={email}
           onChange={(e) => {
@@ -47,6 +57,7 @@ function App() {
           placeholder="Email"
         />
         <input
+          name="password"
           type="password"
           value={password}
           onChange={(e) => {
