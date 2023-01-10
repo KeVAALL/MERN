@@ -10,6 +10,23 @@ app.use(express.json());
 
 mongoose.connect("mongodb://localhost:27017/mern-stack-user");
 
+const handleErrors = (error) => {
+  let errors = { email: "", password: "" };
+
+  if (error.code === 11000) {
+    errors.email = "Duplicate Email. Already in use";
+    return errors;
+  }
+
+  if (error.message.includes("UserData validation failed")) {
+    Object.values(error.errors).forEach(({ properties }) => {
+      errors[properties.path] = properties.message;
+    });
+  }
+
+  return errors;
+};
+
 app.get("/", (req, res) => {
   res.send("Hello World");
 });
@@ -23,7 +40,12 @@ app.post("/register", async (req, res) => {
     res.send(user);
   } catch (error) {
     console.log(error.message, error.code);
-    res.send({ error, status: "error" });
+
+    const errors = handleErrors(error);
+
+    res.status(404).json({ errors });
+
+    // res.send({ error: error.errors, status: "error" });
   }
 
   console.log(req.body);
