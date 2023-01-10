@@ -23,6 +23,7 @@ app.post("/register", async (req, res) => {
     res.send(user);
   } catch (error) {
     console.log(error);
+    res.send({ error, status: "error" });
   }
 
   console.log(req.body);

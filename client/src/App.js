@@ -1,74 +1,19 @@
-import logo from "./logo.svg";
-import React, { useState } from "react";
-import "./App.css";
+import React from "react";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import Login from "./pages/Login.js";
+import Register from "./pages/Register.js";
 
-function App() {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-
-  const emptyInput = () => {
-    setName("");
-    setEmail("");
-    setPassword("");
-  };
-
-  const registerUser = async (e) => {
-    e.preventDefault();
-
-    const response = await fetch("http://localhost:4000/register", {
-      method: "POST",
-      headers: {
-        "Content-type": "application/json",
-      },
-      body: JSON.stringify({
-        name,
-        email,
-        password,
-      }),
-    });
-    const data = await response.json();
-
-    console.log(data);
-    emptyInput();
-    // setName("");
-  };
-
+const App = () => {
   return (
     <div>
-      <h1>Register</h1>
-      <form onSubmit={registerUser}>
-        <input
-          name="name"
-          type="text"
-          value={name}
-          onChange={(e) => {
-            setName(e.target.value);
-          }}
-          placeholder="Name"
-        />
-        <input
-          name="email"
-          type="email"
-          value={email}
-          onChange={(e) => {
-            setEmail(e.target.value);
-          }}
-          placeholder="Email"
-        />
-        <input
-          name="password"
-          type="password"
-          value={password}
-          onChange={(e) => {
-            setPassword(e.target.value);
-          }}
-          placeholder="Password"
-        />
-        <input type="submit" value="Register" />
-      </form>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+        </Routes>
+      </BrowserRouter>
     </div>
   );
-}
+};
 
 export default App;
