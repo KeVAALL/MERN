@@ -53,7 +53,7 @@ app.post("/register", async (req, res) => {
     const user = await User.create({ name, email, password });
     const token = createToken(user._id);
     console.log(token);
-    res.cookie("jwt", token, { maxAge: maxAge * 1000, httpOnly: false });
+    res.cookie("jwt", token, { maxAge: maxAge * 1000, httpOnly: true });
 
     res.json({ user: user._id, token });
   } catch (error) {
@@ -61,7 +61,7 @@ app.post("/register", async (req, res) => {
 
     const errors = handleErrors(error);
 
-    res.status(404).json({ errors });
+    res.status(404).json({ errors: errors });
 
     // res.send({ error: error.errors, status: "error" });
   }

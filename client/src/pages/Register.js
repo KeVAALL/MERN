@@ -1,10 +1,13 @@
 import React, { useState } from "react";
+import { Navigate } from "react-router-dom";
 import "../App.css";
 
 function Register() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [emailError, setEmailError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
 
   const emptyInput = () => {
     setName("");
@@ -12,8 +15,11 @@ function Register() {
     setPassword("");
   };
 
-  const registerUser = async (e) => {
+  async function registerUser(e) {
     e.preventDefault();
+
+    setEmailError("");
+    setPasswordError("");
 
     const response = await fetch("http://localhost:4000/register", {
       method: "POST",
@@ -29,10 +35,18 @@ function Register() {
     });
     const data = await response.json();
 
-    console.log(data);
+    if (data.errors) {
+      setEmailError(data.errors.email);
+      setPasswordError(data.errors.password);
+    }
+    if (data.user && data.token) {
+      // this.props.history.push("/home");
+      console.log(data);
+      // return <Navigate replace to="/home" />;
+    }
+
     emptyInput();
-    // setName("");
-  };
+  }
 
   return (
     <div>
@@ -56,6 +70,7 @@ function Register() {
           }}
           placeholder="Email"
         />
+        {emailError && <p>Email Error</p>}
         <input
           name="password"
           type="password"
@@ -65,6 +80,7 @@ function Register() {
           }}
           placeholder="Password"
         />
+        {passwordError && <p>{passwordError}</p>}
         <input type="submit" value="Register" />
       </form>
     </div>
