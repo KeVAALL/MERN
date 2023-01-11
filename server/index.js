@@ -4,10 +4,17 @@ const PORT = 4000 || process.env.PORT;
 const mongoose = require("mongoose");
 const cors = require("cors");
 const jwt = require("jsonwebtoken");
+const cookieParser = require("cookie-parser");
 const User = require("./models/user.model.js");
 
-app.use(cors());
+const corsOptions = {
+  origin: true, //included origin as true
+  credentials: true, //included credentials as true
+};
+
+app.use(cors(corsOptions));
 app.use(express.json());
+app.use(cookieParser());
 
 mongoose.connect("mongodb://localhost:27017/mern-stack-user");
 
@@ -30,7 +37,7 @@ const handleErrors = (error) => {
 
 const maxAge = 3 * 24 * 60 * 60;
 const createToken = (id) => {
-  return jwt.sign({ id }, "kcjbrQgPbsh2n4sqvH2tw5dMCG8y016/oZIzbcFrNDM=", {
+  return jwt.sign({ id }, "keval khatri", {
     expiresIn: maxAge,
   });
 };
@@ -45,9 +52,10 @@ app.post("/register", async (req, res) => {
   try {
     const user = await User.create({ name, email, password });
     const token = createToken(user._id);
-    res.cookie("jwt", token, { httpOnly: true, maxAge: maxAge * 1000 });
+    console.log(token);
+    res.cookie("jwt", token, { maxAge: maxAge * 1000, httpOnly: false });
 
-    res.json({ user: user._id });
+    res.json({ user: user._id, token });
   } catch (error) {
     console.log(error.message, error.code);
 
