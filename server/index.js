@@ -6,6 +6,8 @@ const cors = require("cors");
 const jwt = require("jsonwebtoken");
 const cookieParser = require("cookie-parser");
 const User = require("./models/user.model.js");
+const createToken = require("./utils/generateToken.js");
+const handleErrors = require("./utils/handleError.js");
 
 const corsOptions = {
   origin: true, //included origin as true
@@ -18,30 +20,6 @@ app.use(cookieParser());
 
 mongoose.connect("mongodb://localhost:27017/mern-stack-user");
 
-const handleErrors = (error) => {
-  let errors = { email: "", password: "" };
-
-  if (error.code === 11000) {
-    errors.email = "Duplicate Email. Already in use";
-    return errors;
-  }
-
-  if (error.message.includes("UserData validation failed")) {
-    Object.values(error.errors).forEach(({ properties }) => {
-      errors[properties.path] = properties.message;
-    });
-  }
-
-  return errors;
-};
-
-const maxAge = 3 * 24 * 60 * 60;
-const createToken = (id) => {
-  return jwt.sign({ id }, "keval khatri", {
-    expiresIn: maxAge,
-  });
-};
-
 app.get("/", (req, res) => {
   res.send("Hello World");
 });
@@ -51,10 +29,14 @@ app.post("/register", async (req, res) => {
 
   try {
     const user = await User.create({ name, email, password });
+
     const token = createToken(user._id);
     console.log(token);
-    res.cookie("jwt", token, { maxAge: maxAge * 1000, httpOnly: true });
 
+    res.cookie("jwt", token, {
+      maxAge: 3 * 24 * 60 * 60 * 1000,
+      httpOnly: true,
+    });
     res.json({ user: user._id, token });
   } catch (error) {
     console.log(error.message, error.code);
@@ -62,8 +44,6 @@ app.post("/register", async (req, res) => {
     const errors = handleErrors(error);
 
     res.status(404).json({ errors: errors });
-
-    // res.send({ error: error.errors, status: "error" });
   }
 });
 
@@ -77,8 +57,6 @@ app.post("/login", async (req, res) => {
   } else {
     return res.send({ status: "not ok" });
   }
-
-  console.log(req.body);
 });
 
 app.listen(PORT, () => {
