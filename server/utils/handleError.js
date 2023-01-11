@@ -12,6 +12,13 @@ const handleErrors = (error) => {
     });
   }
 
+  if (error.message.includes("Incorrect Password")) {
+    errors.password = "Incorrect Password";
+  }
+  if (error.message.includes("Incorrect Email")) {
+    errors.email = "Incorrect Email";
+  }
+
   return errors;
 };
 

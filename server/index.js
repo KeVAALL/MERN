@@ -31,7 +31,6 @@ app.post("/register", async (req, res) => {
     const user = await User.create({ name, email, password });
 
     const token = createToken(user._id);
-    console.log(token);
 
     res.cookie("jwt", token, {
       maxAge: 3 * 24 * 60 * 60 * 1000,
@@ -51,11 +50,21 @@ app.post("/login", async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    console.log(email, password);
     const user = await User.login(email, password);
+    const token = createToken(user._id);
+
+    res.cookie("jwt", token, {
+      maxAge: 3 * 24 * 60 * 60 * 1000,
+      httpOnly: true,
+    });
+
     res.status(200).json({ user: user._id });
   } catch (error) {
-    res.status(400).json({});
+    console.log(error.message, error.code);
+
+    const errors = handleErrors(error);
+    console.log(errors);
+    res.status(400).json({ errors });
   }
 });
 

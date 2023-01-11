@@ -3,15 +3,21 @@ import { useState } from "react";
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [emailError, setEmailError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
 
   async function loginUser(event) {
     event.preventDefault();
+
+    setEmailError("");
+    setPasswordError("");
 
     const response = await fetch("http://localhost:4000/login", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
+      credentials: "include",
       body: JSON.stringify({
         email,
         password,
@@ -20,7 +26,15 @@ function Login() {
 
     const data = await response.json();
 
-    console.log(data);
+    if (data.errors) {
+      setEmailError(data.errors.email);
+      setPasswordError(data.errors.password);
+    }
+    if (data.user && data.token) {
+      // this.props.history.push("/home");
+      console.log(data);
+      // return <Navigate replace to="/home" />;
+    }
   }
 
   return (
@@ -34,6 +48,7 @@ function Login() {
           type="email"
           placeholder="Email"
         />
+        {emailError && <p>Email Error</p>}
         <br />
         <input
           name="password"
@@ -42,6 +57,7 @@ function Login() {
           type="password"
           placeholder="Password"
         />
+        {passwordError && <p>{passwordError}</p>}
         <br />
         <input type="submit" value="Login" />
       </form>
