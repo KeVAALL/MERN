@@ -50,12 +50,12 @@ app.post("/register", async (req, res) => {
 app.post("/login", async (req, res) => {
   const { email, password } = req.body;
 
-  const user = await User.findOne({ email, password });
-
-  if (user) {
-    return res.send({ status: "ok", user: "true" });
-  } else {
-    return res.send({ status: "not ok" });
+  try {
+    console.log(email, password);
+    const user = await User.login(email, password);
+    res.status(200).json({ user: user._id });
+  } catch (error) {
+    res.status(400).json({});
   }
 });
 
