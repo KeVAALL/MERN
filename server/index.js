@@ -3,6 +3,7 @@ const app = express();
 const PORT = 4000 || process.env.PORT;
 const mongoose = require("mongoose");
 const cors = require("cors");
+const jwt = require("jsonwebtoken");
 const User = require("./models/user.model.js");
 
 app.use(cors());
@@ -27,6 +28,13 @@ const handleErrors = (error) => {
   return errors;
 };
 
+const maxAge = 3 * 24 * 60 * 60;
+const createToken = (id) => {
+  return jwt.sign({ id }, "kcjbrQgPbsh2n4sqvH2tw5dMCG8y016/oZIzbcFrNDM=", {
+    expiresIn: maxAge,
+  });
+};
+
 app.get("/", (req, res) => {
   res.send("Hello World");
 });
@@ -36,8 +44,10 @@ app.post("/register", async (req, res) => {
 
   try {
     const user = await User.create({ name, email, password });
+    const token = createToken(user._id);
+    res.cookie("jwt", token, { httpOnly: true, maxAge: maxAge * 1000 });
 
-    res.send(user);
+    res.json({ user: user._id });
   } catch (error) {
     console.log(error.message, error.code);
 
@@ -47,8 +57,6 @@ app.post("/register", async (req, res) => {
 
     // res.send({ error: error.errors, status: "error" });
   }
-
-  console.log(req.body);
 });
 
 app.post("/login", async (req, res) => {
