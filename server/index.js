@@ -56,7 +56,7 @@ app.post("/login", async (req, res) => {
 
     res.cookie("jwt", token, {
       maxAge: 3 * 24 * 60 * 60 * 1000,
-      httpOnly: true,
+      httpOnly: false,
     });
 
     res.status(200).json({ user });
@@ -73,4 +73,10 @@ app.post("/login", async (req, res) => {
 app.get("/home", requiredAuth, (req, res) => {
   const { decodedToken } = req.body;
   console.log(decodedToken);
+});
+
+app.get("/logout", (req, res) => {
+  console.log("Logout");
+  // res.cookie("jwt", "", { maxAge: 1 });
+  res.clearCookie("jwt");
 });

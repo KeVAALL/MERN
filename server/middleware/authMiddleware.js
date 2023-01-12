@@ -2,8 +2,10 @@ const jwt = require("jsonwebtoken");
 const cookieParser = require("cookie-parser");
 
 const requireAuth = (req, res, next) => {
-  const token = req.cookies.jwt;
+  const token = req.headers.cookie;
   console.log(token);
+
+  //   console.log(stringAccessToken);
 
   // check json web token exists & is verified
   if (token) {
