@@ -40,7 +40,6 @@ function Register() {
       setPasswordError(data.errors.password);
     }
     if (data.user && data.token) {
-      // this.props.history.push("/home");
       console.log(data);
       // return <Navigate replace to="/home" />;
     }

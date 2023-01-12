@@ -25,13 +25,13 @@ function Login() {
     });
 
     const data = await response.json();
+    console.log(data);
 
     if (data.errors) {
       setEmailError(data.errors.email);
       setPasswordError(data.errors.password);
     }
     if (data.user && data.token) {
-      // this.props.history.push("/home");
       console.log(data);
       // return <Navigate replace to="/home" />;
     }

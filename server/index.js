@@ -8,6 +8,7 @@ const cookieParser = require("cookie-parser");
 const User = require("./models/user.model.js");
 const createToken = require("./utils/generateToken.js");
 const handleErrors = require("./utils/handleError.js");
+const requiredAuth = require("./middleware/authMiddleware.js");
 
 const corsOptions = {
   origin: true, //included origin as true
@@ -18,10 +19,10 @@ app.use(cors(corsOptions));
 app.use(express.json());
 app.use(cookieParser());
 
-mongoose.connect("mongodb://localhost:27017/mern-stack-user");
-
-app.get("/", (req, res) => {
-  res.send("Hello World");
+mongoose.connect("mongodb://localhost:27017/mern-stack-user").then(() => {
+  app.listen(PORT, () => {
+    console.log(`Server Started. Listening on ${PORT}`);
+  });
 });
 
 app.post("/register", async (req, res) => {
@@ -58,7 +59,8 @@ app.post("/login", async (req, res) => {
       httpOnly: true,
     });
 
-    res.status(200).json({ user: user._id });
+    res.status(200).json({ user });
+    // res.status(200).redirect("http://localhost:3000/home");
   } catch (error) {
     console.log(error.message, error.code);
 
@@ -68,6 +70,7 @@ app.post("/login", async (req, res) => {
   }
 });
 
-app.listen(PORT, () => {
-  console.log(`Server Started. Listening on ${PORT}`);
+app.get("/home", requiredAuth, (req, res) => {
+  const { decodedToken } = req.body;
+  console.log(decodedToken);
 });
