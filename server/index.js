@@ -52,15 +52,10 @@ app.post("/login", async (req, res) => {
 
   try {
     const user = await User.login(email, password);
+
     const token = createToken(user._id);
 
-    res.cookie("jwt", token, {
-      maxAge: 3 * 24 * 60 * 60 * 1000,
-      httpOnly: false,
-    });
-
-    res.status(200).json({ user });
-    // res.status(200).redirect("http://localhost:3000/home");
+    res.status(200).json({ status: "Ok", user: token });
   } catch (error) {
     console.log(error.message, error.code);
 

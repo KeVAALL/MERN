@@ -27,13 +27,11 @@ function Login() {
     const data = await response.json();
     console.log(data);
 
-    if (data.errors) {
-      setEmailError(data.errors.email);
-      setPasswordError(data.errors.password);
-    }
-    if (data.user && data.token) {
-      console.log(data);
-      // return <Navigate replace to="/home" />;
+    if (data.user) {
+      alert("Login Successful");
+      window.location.href = "/home";
+    } else {
+      alert("PLease check credentials!");
     }
   }
 

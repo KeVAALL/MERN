@@ -15,7 +15,8 @@ function Home() {
   }
 
   useEffect(() => {
-    getAuth();
+    // getAuth();
+    alert("Redirected!");
   }, []);
   return (
     <>
