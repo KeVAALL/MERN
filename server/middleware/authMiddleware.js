@@ -1,11 +1,7 @@
 const jwt = require("jsonwebtoken");
-const cookieParser = require("cookie-parser");
 
 const requireAuth = (req, res, next) => {
-  const token = req.headers.cookie;
-  console.log(token);
-
-  //   console.log(stringAccessToken);
+  const token = req.headers["x-access-token"];
 
   // check json web token exists & is verified
   if (token) {
@@ -13,14 +9,13 @@ const requireAuth = (req, res, next) => {
       if (err) {
         console.log(err.message);
       } else {
-        console.log(decodedToken);
-
+        // console.log(decodedToken);
+        req.decodedToken = decodedToken;
         next();
       }
     });
   } else {
-    // res.status(404).json({ err: "Token not found" });
-    console.log("Not Found");
+    res.status(404).json({ err: "Token not found" });
   }
 };
 

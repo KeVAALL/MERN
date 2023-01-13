@@ -33,12 +33,19 @@ function Home() {
     }
   }
 
+  async function logOut() {
+    const token = localStorage.removeItem("jwt");
+    console.log(token);
+    window.location.href = "/home";
+  }
+
   useEffect(() => {
     getAuth();
   }, []);
   return (
     <>
       <h1>Registered!</h1>
+      <button onClick={logOut}>Logout!</button>
     </>
   );
 }

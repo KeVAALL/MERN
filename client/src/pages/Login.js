@@ -30,9 +30,12 @@ function Login() {
     if (data.user) {
       localStorage.setItem("jwt", data.user);
       alert("Login Successful");
-      // window.location.href = "/home";
     } else {
-      alert("PLease check credentials!");
+      if (data.errors.email) {
+        setEmailError("Incorrect Email");
+      } else {
+        setPasswordError("Incorrect Password");
+      }
     }
   }
 
