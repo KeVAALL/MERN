@@ -28,8 +28,9 @@ function Login() {
     console.log(data);
 
     if (data.user) {
+      localStorage.setItem("jwt", data.user);
       alert("Login Successful");
-      window.location.href = "/home";
+      // window.location.href = "/home";
     } else {
       alert("PLease check credentials!");
     }

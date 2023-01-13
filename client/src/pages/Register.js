@@ -35,13 +35,8 @@ function Register() {
     });
     const data = await response.json();
 
-    if (data.errors) {
-      setEmailError(data.errors.email);
-      setPasswordError(data.errors.password);
-    }
-    if (data.user && data.token) {
-      console.log(data);
-      // return <Navigate replace to="/home" />;
+    if ((data.status = "Ok")) {
+      window.location.href = "/login";
     }
 
     emptyInput();

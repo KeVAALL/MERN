@@ -65,9 +65,9 @@ app.post("/login", async (req, res) => {
   }
 });
 
-app.get("/home", requiredAuth, (req, res) => {
-  const { decodedToken } = req.body;
-  console.log(decodedToken);
+app.get("/home", (req, res) => {
+  const token = req.headers["x-access-token"];
+  console.log(token);
 });
 
 app.get("/logout", (req, res) => {

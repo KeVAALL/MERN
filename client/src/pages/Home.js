@@ -1,22 +1,40 @@
 import React, { useEffect } from "react";
+import jwtDecode from "jwt-decode";
 import "../App.css";
 
 function Home() {
+  async function populate() {
+    const req = await fetch("http://localhost:4000/home", {
+      headers: {
+        "x-access-token": localStorage.getItem("jwt"),
+      },
+    });
+
+    const data = await req.json();
+
+    console.log(data);
+  }
+
   async function getAuth() {
-    try {
-      const response = await fetch("http://localhost:4000/home");
+    const token = localStorage.getItem("jwt");
+    console.log(token);
 
-      const data = await response.json();
-
-      console.log(data);
-    } catch (error) {
-      console.log(error);
+    if (token) {
+      const user = jwtDecode(token);
+      if (!user) {
+        localStorage.removeItem("jwt");
+        window.location.href = "/login";
+      } else {
+        alert("Logged In!");
+        populate();
+      }
+    } else {
+      window.location.href = "/login";
     }
   }
 
   useEffect(() => {
-    // getAuth();
-    alert("Redirected!");
+    getAuth();
   }, []);
   return (
     <>
